@@ -3,14 +3,11 @@
 #popularities on social media and in mainstream media are correlated in some way? You can 
 #address other questions of your choice, too.
 
-import requests
 import pandas as pd
-from collections import Counter
 from nltk import ngrams
 import string
 import collections
 import re
-import numpy as np
 import matplotlib.pyplot as plt
 
 #open corpus text file
@@ -27,22 +24,35 @@ corpus_text = re.sub(regex, "", corpus_text)
 #getting words
 tokenized = corpus_text.split()
 
-bi_grams = ngrams(tokenized, 2)
-tri_grams = ngrams(tokenized, 3)
+bigrams = ngrams(tokenized, 2)
+trigrams = ngrams(tokenized, 3)
 
 #counting bigrams
-bi_grams_freq = collections.Counter(bi_grams)
-tri_grams_freq = collections.Counter(tri_grams)
+bi_grams_freq = collections.Counter(bigrams)
+tri_grams_freq = collections.Counter(trigrams)
 
-print(bi_grams_freq.most_common(20))
-print(tri_grams_freq.most_common(20))
+#try to create file
+try:
+    bigrams_file = open("bigrams.txt", "x")
+    trigrams_file = open("trigrams.txt", "x")
+except FileExistsError:
+    print("Files already exist")
+
+#overwrite any existing data in file
+bigrams_file = open("bigrams.txt", "w")
+trigrams_file = open("trigrams.txt", "w")
+
+bigrams_list = list(bi_grams_freq.most_common())
+trigrams_list = list(tri_grams_freq.most_common())
+
+bigrams_file.write(str(bigrams_list))
+trigrams_file.write(str(trigrams_list))
 
 #ngram plots
-bigrams_series = pd.Series(bi_grams_freq)[:20]
-
-bigrams_series.sort_values().plot.barh(color='black', width=1, figsize=(12, 8))
-plt.title('Most Frequent Bigrams')
-plt.ylabel('Bigram')
-plt.xlabel('Occurances')
-
+bigrams_series = pd.DataFrame(bigrams_list[0:20], columns=["Bigram", "Frequency"])
+bigrams_series.plot(kind="bar",
+                    x="Bigram",
+                    y="Frequency",
+                    color="green")
+plt.title("Corpus Bigram Frequency Plot")
 plt.show()
