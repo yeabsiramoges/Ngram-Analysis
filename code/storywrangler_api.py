@@ -1,6 +1,6 @@
 import requests
-import json
 import pandas as pd
+
 #https://storywrangling.org/api/ngrams/your api query
 #api/ngrams/<query>?<parameter>=<value>&<parameter>=<value>&<parameter>=<value>
 
@@ -16,7 +16,7 @@ lang="en"
 rt='false'
 src="api"
 
-df=pd.read_csv("phrases.csv")
+df=pd.read_csv("output\phrases.csv")
 df1=df[::-1]
 df1= df1.head(3000)
 
