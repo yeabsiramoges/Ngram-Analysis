@@ -17,7 +17,6 @@ rt='false'
 src="api"
 
 df=pd.read_csv("phrases.csv")
-#df1 = df.head(6000)
 df1=df[::-1]
 df1= df1.head(3000)
 
@@ -26,7 +25,6 @@ train2=pd.DataFrame(columns=["phrase","count","count_no_rt","date","freq","freq_
 train2=pd.DataFrame()
 
 for ind,i in df1.iterrows():
-    #for i in range(:
     word1=i["word1"] 
     word2=i["word2"]
 
@@ -36,28 +34,18 @@ for ind,i in df1.iterrows():
     else:
         word3=i["word3"]
         phrase= str( word1) + " " +str(word2) + ' ' + str(word3)
+    
     print(phrase)
-
-
-
-
-
-
-
 
     r = requests.get("https://storywrangling.org/api/ngrams/%s?metric=%s&language=%s&rt=%s&src=%s" % (phrase,metric,lang,rt,src))
     print(("https://storywrangling.org/api/ngrams/%s?metric=%s&language=%s&rt=%s&src=%s" % (phrase,metric,lang,rt,src)))
     print(r)
-#print(r.json())
     try:
         cont=r.json()
-       # print(cont)
-#pd.set_option('display.max_columns', None)
+
         train = pd.DataFrame.from_dict(cont["data"])
         train1=pd.DataFrame()
-#train.reset_index( inplace=True)
-       # print(train)
-        #print(train)
+
         phrase_=[phrase]*len(train[phrase]["count"])
         train1["phrase"]= pd.Series(phrase_)
         train1["count"]=pd.Series(train[phrase]["count"])
@@ -77,13 +65,8 @@ for ind,i in df1.iterrows():
     except:
         continue
 
-
 filename="data_phrases" + ".csv"
-#train2=train2.dropna(axis=0)
 train2.to_csv(filename)
-#with open(filename, 'w') as outfile:
-   # json.dump(cont, outfile)
-
 
 
 
