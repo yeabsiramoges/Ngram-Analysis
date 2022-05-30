@@ -11,6 +11,7 @@ import string
 import collections
 import re
 import numpy as np
+import matplotlib.pyplot as plt
 
 #open corpus text file
 with open("sample-data/text.txt","r",encoding='utf-8', errors='replace') as file:
@@ -33,6 +34,15 @@ tri_grams = ngrams(tokenized, 3)
 bi_grams_freq = collections.Counter(bi_grams)
 tri_grams_freq = collections.Counter(tri_grams)
 
-print(bi_grams_freq.most_common(10))
-print(tri_grams_freq.most_common(10))
+print(bi_grams_freq.most_common(20))
+print(tri_grams_freq.most_common(20))
 
+#ngram plots
+bigrams_series = pd.Series(bi_grams_freq)[:20]
+
+bigrams_series.sort_values().plot.barh(color='black', width=1, figsize=(12, 8))
+plt.title('Most Frequent Bigrams')
+plt.ylabel('Bigram')
+plt.xlabel('Occurances')
+
+plt.show()
