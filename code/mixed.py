@@ -11,6 +11,9 @@ import string
 import collections
 import re
 import matplotlib.pyplot as plt
+import json
+import csv
+import requests
 
 nltk.download('vader_lexicon')
 
@@ -83,3 +86,23 @@ for ngram in bigrams_list:
     ngram_index += 1
 
 bigram_concordance_file.write(str(concordance_data))
+
+#Storywrangler API
+depth = 10
+lang = "es"
+metric = "rank"
+rt = "false"
+src = "api"
+
+dfs = {}
+
+for ngram in bigrams_list[0:depth]:
+    phrase = ngram[0][0] + " " + ngram[0][1]
+    storywrangler_api = requests.get("https://storywrangling.org/api/ngrams/%s?metric=%s&language=%s&rt=%s&src=%s" % (phrase,metric,lang,rt,src)).json()
+
+    dfs[phrase] = pd.DataFrame(
+        storywrangler_api['data'], 
+        columns=[phrase])
+    
+for ngram in dfs:
+    dfs[ngram].to_csv(f"{ngram}.csv")
