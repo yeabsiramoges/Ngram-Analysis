@@ -1,8 +1,3 @@
-#How about linking the two pieces together? For example, given the popular n-grams from the 
-#corpus data, can you automatically feed them to the StoryWrangler API, and see if their 
-#popularities on social media and in mainstream media are correlated in some way? You can 
-#address other questions of your choice, too.
-
 import pandas as pd
 from nltk import ngrams, Text
 import nltk
@@ -11,8 +6,6 @@ import string
 import collections
 import re
 import matplotlib.pyplot as plt
-import json
-import csv
 import requests
 
 nltk.download('vader_lexicon')
