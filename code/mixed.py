@@ -4,11 +4,15 @@
 #address other questions of your choice, too.
 
 import pandas as pd
-from nltk import ngrams
+from nltk import ngrams, Text
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 import string
 import collections
 import re
 import matplotlib.pyplot as plt
+
+nltk.download('vader_lexicon')
 
 #open corpus text file
 with open("sample-data/text.txt","r",encoding='utf-8', errors='replace') as file:
@@ -55,4 +59,27 @@ bigrams_series.plot(kind="bar",
                     y="Frequency",
                     color="green")
 plt.title("Corpus Bigram Frequency Plot")
-plt.show()
+#plt.show()
+
+#extracting concordance and sentiment analysis
+corpus_text = Text(tokenized)
+ngram_index = 0
+
+try:
+    bigram_concordance_file = open("concordance.txt", "x")
+except:
+    bigram_concordance_file = open("concordance.txt", "w")
+
+concordance_data = []
+
+#sentiment analyzer
+sia = SentimentIntensityAnalyzer()
+
+for ngram in bigrams_list:
+    bigram = ngram[0][0] + " " + ngram[0][1]
+    bigram_concordance = corpus_text.concordance_list([ngram[0][0], ngram[0][1]])
+    sentiment = sia.polarity_scores(bigram)
+    concordance_data.append([ngram_index, bigram, bigram_concordance, sentiment])
+    ngram_index += 1
+
+bigram_concordance_file.write(str(concordance_data))
